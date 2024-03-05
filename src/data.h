@@ -116,7 +116,9 @@ const Subcategory subcate_docker_commit = {
     "commit", 
     {"commit", "COMMIT", "push", "PUSH"}, 
     {
-        "docker commit {container_name} {new_image_name} # create an image after you modify a container # this could become your new template",
+        "docker commit {container_name} {new_image_name}",
+        "# create an image after you modify a container # this could become your new template",
+        "\n",
         "docker login",
         "docker logout",
         "docker tag {container_name} {username}/{remote_image_name}",
@@ -126,9 +128,10 @@ const Subcategory subcate_docker_commit = {
 
 const Subcategory subcate_docker_container = {
     "container", 
-    {"container", "CONTAINER", "start", "attach"}, 
+    {"container", "CONTAINER", "start", "START", "attach", "ATTACH"}, 
     {
-        "docker exec -it {container_name} /bin/bash # attach to the same container without echoing the same commandline",
+        "docker exec -it {container_name} /bin/bash", 
+        "# attach to the same container without echoing the same commandline",
         "\n",
         "docker start {container_name} # start container",
         "docker attach {container_name} # attach to a container, namely, get inside the container",
@@ -157,9 +160,235 @@ const category command_docker = {
     }
 };
 
+// remote
+const Subcategory subcate_remote_setup = {
+    "setup", 
+    {"setup", "install", "INSTALL", "SETUP"}, 
+    {
+        "sudo apt-get install openssh-server",
+    }
+};
+
+const Subcategory subcate_remote_ssh = {
+    "transmit", 
+    { "transmit", "TRANSMIT"}, 
+    {
+        "ssh {username}@{ip_addr} -p {port_number}",
+        "# note that port_number is required for DOCKER",
+        "\n",
+        "zip -r {filename}.zip {filename}",
+        "sudo scp -P {port_number} {file_name} {username}@{IP_ADDR}:{directory_localtion}"
+    }
+};
+
+const category command_remote = {
+    "ssh", 
+    {"ssh", "SSH"},
+    {
+        subcate_remote_setup,
+        subcate_remote_ssh
+    }
+};
+
+// vicon
+const Subcategory subcate_vicon_install = {
+    "install", 
+    { "install", "INSTALL"}, 
+    {
+        "sudo apt update",
+        "sudo apt-get install ros-noetic-vrpn ros-noetic-vrpn-client-ros",
+    }
+};
+
+const Subcategory subcate_vicon_remap = {
+    "remap", 
+    { "remap", "REMAP"}, 
+    {
+        "<remap from=\"/vrpn_client_node/{your_object_name}/pose\" to=\"/mavros/vision_pose/pose\" />",
+    }
+};
+
+const Subcategory subcate_vicon_launch = {
+    "launch", 
+    { "launch", "LAUNCH", "roslaunch", "ROSLAUNCH"}, 
+    {
+        "<launch>",
+        "\n",
+        "   <arg name=\"vicon_server\" default=\"192.168.10.1\"/>",
+        "\n",
+        "       <node pkg=\"vrpn_client_ros\" type=\"vrpn_client_node\" name=\"vrpn_client_node\" output=\"screen\">",
+        "           <rosparam subst_value=\"true\">",
+        "               server: $(arg vicon_server)",
+        "               port: 3883",
+        "\n",
+        "               update_frequency: 100.0",
+        "               frame_id: world",
+        "\n",
+        "               # Use the VRPN server's time, or the client's ROS time.",
+        "               use_server_time: false",
+        "               broadcast_tf: true",
+        "\n",
+        "               # Must either specify refresh frequency > 0.0, or a list of trackers to create",
+        "               refresh_tracker_frequency: 1.0",
+        "               #trackers:",
+        "               #- FirstTracker",
+        "               #- SecondTracker",
+        "           </rosparam>",
+        "\n",
+        "       <remap from=\"/vrpn_client_node/your_object_name/pose\" to=\"/mavros/vision_pose/pose\" />",
+        "       </node>"
+        "\n",
+        "</launch>",
+    }
+};
+
+const Subcategory subcate_vicon_multi = {
+    "multi", 
+    { "multi", "MULTI"}, 
+    {
+        "# master_multi.sh",
+        "export ROS_HOSTNAME=192.168.{MASTER_IP}",
+        "export ROS_MASTER_URI=http://192.168.{MASTER_IP}:11311",
+        "export ROS_IP=192.168.{MASTER_IP}",
+        "\n",
+        "# slave_multi.sh",
+        "export ROS_HOSTNAME=192.168.{SLAVE_IP}",
+        "export ROS_MASTER_URI=http://192.168.{MASTER_IP}:11311",
+        "export ROS_IP=192.168.{SLAVE_IP}",
+    }
+};
+
+const category command_vicon = {
+    "vicon", 
+    {"vicon", "VICON"},
+    {
+        subcate_vicon_install,
+        subcate_vicon_remap,
+        subcate_vicon_launch,
+        subcate_vicon_multi
+    }
+};
+
+// mavros 
+const Subcategory subcate_mavros_install = {
+    "install", 
+    { "install", "INSTALL"}, 
+    {
+        "# ubuntu 18.04",
+        "sudo apt-get install ros-melodic-mavros ros-melodic-mavros-extras ros-melodic-mavros-msgs",
+        "\n",
+        "# ubuntu 20.04",
+        "sudo apt-get install ros-noetic-mavros ros-noetic-mavros-extras ros-noetic-mavros-msgs"
+    }
+};
+
+const Subcategory subcate_mavros_launch = {
+    "launch", 
+    { "launch", "LAUNCH"}, 
+    {
+        "<launch>",
+        "    <!-- example launch script for PX4 based FCU's -->",
+        "",
+        "    <!-- launch MAVLINK in ROS -->",
+        "    <arg name=\"fcu_url\" default=\"/dev/ttyUSB0:921600\" />",
+        "    <!-- ",
+        "        when using USB serial (w/ onboard computer)",
+        "        - note that from time to time it might be ",
+        "          /dev/ttyACM0 (check it through \"ls /dev/tty + tab\")",
+        "        - note that baudrate \"921600\" varies from time to time,",
+        "          it depends on your setting in GGC            ",
+        "    -->",
+        "",
+        "    <!-- <arg name=\"fcu_url\" default=\"tcp://{IP_ADDRRESS}:5760\" /> -->",
+        "    <!-- when using WIFI-module (w/o onboard computer) -->",
+        "",
+        "    <!-- <arg name=\"fcu_url\" default=\"udp://:14540@127.0.0.1:14557\" /> -->",
+        "    <!-- during Gazebo SITL simulation -->",
+        "",
+        "    <!-- QGC broadcast -->",
+        "    <arg name=\"gcs_url\" default=\"udp-b://@\" /> ",
+        "    <!-- boardcast to all local network -->",
+        "",
+        "    <!-- <arg name=\"gcs_url\" default=\"udp://:14560@{IP_ADDRRESS}:14550\" /> -->",
+        "    <!-- broadcast to specific IP -->",
+        "",
+        "    <!-- <arg name=\"gcs_url\" default=\"udp://:14560@127.0.0.1:14550\" /> -->",
+        "    <!-- during Gazebo SITL simulation -->",
+        "",
+        "",
+        "    <arg name=\"tgt_system\" default=\"1\" />",
+        "    <arg name=\"tgt_component\" default=\"1\" />",
+        "    <arg name=\"log_output\" default=\"screen\" />",
+        "    <arg name=\"fcu_protocol\" default=\"v2.0\" />",
+        "    <arg name=\"respawn_mavros\" default=\"false\" />",
+        "",
+        "    <include file=\"$(find mavros)/launch/node.launch\">",
+        "        <arg name=\"pluginlists_yaml\" value=\"$(find mavros)/launch/px4_pluginlists.yaml\" />",
+        "        <arg name=\"config_yaml\" value=\"$(find mavros)/launch/px4_config.yaml\" />",
+        "",
+        "        <arg name=\"fcu_url\" value=\"$(arg fcu_url)\" />",
+        "        <arg name=\"gcs_url\" value=\"$(arg gcs_url)\" />",
+        "        <arg name=\"tgt_system\" value=\"$(arg tgt_system)\" />",
+        "        <arg name=\"tgt_component\" value=\"$(arg tgt_component)\" />",
+        "        <arg name=\"log_output\" value=\"$(arg log_output)\" />",
+        "        <arg name=\"fcu_protocol\" value=\"$(arg fcu_protocol)\" />",
+        "        <arg name=\"respawn_mavros\" default=\"$(arg respawn_mavros)\" />",
+        "    </include>",
+        "</launch>"
+    }
+};
+
+const Subcategory subcate_mavros_fcu = {
+    "fcu", 
+    { "fcu", "FCU"}, 
+    {
+        "<!--when using USB serial (w/ onboard computer)-->",
+        "<arg name=\"fcu_url\" default=\"/dev/ttyUSB0:921600\" />",
+        "\n",
+        "<!-- when using WIFI-module (w/o onboard computer) -->",
+        "<arg name=\"fcu_url\" default=\"tcp://{IP_ADDRRESS}:5760\" />",
+        "\n",
+        "<!-- during Gazebo SITL simulation -->",
+        "<arg name=\"fcu_url\" default=\"udp://:14540@127.0.0.1:14557\" />",
+        "\n",
+    }
+};
+
+const Subcategory subcate_mavros_gcs = {
+    "gcs", 
+    { "gcs", "GCS"}, 
+    {
+        "<!-- boardcast to all local network -->",
+        "<arg name=\"gcs_url\" default=\"udp-b://@\" />",
+        "\n",
+        "<!-- broadcast to specific IP -->",
+        "<arg name=\"gcs_url\" default=\"udp://:14560@{IP_ADDRRESS}:14550\" />",
+        "\n",
+        "<!-- during Gazebo SITL simulation -->",
+        "<arg name=\"gcs_url\" default=\"udp://:14560@127.0.0.1:14550\" />",
+        "\n",
+    }
+};
+
+const category command_mavros = {
+    "mavros", 
+    {"mavros", "MAVROS"},
+    {
+        subcate_mavros_install,
+        subcate_mavros_launch,
+        subcate_mavros_fcu,
+        subcate_mavros_gcs
+    }
+};
+
+
 // all database
-const std::vector<category> database = {command_git,command_docker};
-
-
+const std::vector<category> database = {
+    command_git,
+    command_docker, 
+    command_remote, 
+    command_vicon,
+    command_mavros
+};
 
 #endif

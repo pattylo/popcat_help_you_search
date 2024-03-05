@@ -10,8 +10,8 @@ searchServer::searchServer(QWidget *parent)
     QRect screenGeometry = primaryScreen->geometry();
 
     // Calculate the size for the GUI window (one-quarter of the screen size)
-    int width = screenGeometry.width() / 2;
-    int height = screenGeometry.height() / 2;
+    int width = screenGeometry.width() / 2 * 1.4;
+    int height = screenGeometry.height() / 2 * 1.4;
     
     // Load the image
     QByteArray byteArray = QByteArray::fromBase64(popcatImageData);
@@ -37,7 +37,9 @@ searchServer::searchServer(QWidget *parent)
    
 
     setWindowTitle("PATTY'S INDEX SEARCH!");
-    setFixedSize(width, height);
+    resize(width, height);
+    // setFixedSize(_
+    
 
     QLabel *instructionLabel = new QLabel("SEARCH FOR USEFUL COMMANDLINE!", this);
     instructionLabel->setAlignment(Qt::AlignCenter); // Center-align the text
@@ -129,14 +131,16 @@ void searchServer::performSearch() {
     // resultLabel->setAlignment(Qt::AlignVCenter); // Align text to the center
 
     QFont font = resultLabel->font();
-    font.setPointSize(20); // Set font size to 20 (adjust as needed)
+    font.setPointSize(16); // Set font size to 20 (adjust as needed)
     resultLabel->setFont(font);
 
     // Add the resultLabel to the main layout
     mainLayout->addWidget(resultLabel);
 
     // Whenever you have a search result to display:
-    // resultLabel->clear();
+
+    resultLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    
     resultLabel->setText(searchResultDisplay);
 
     // resultLabel->clear();
