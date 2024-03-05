@@ -174,10 +174,31 @@ const Subcategory subcate_remote_ssh = {
     { "transmit", "TRANSMIT"}, 
     {
         "ssh {username}@{ip_addr} -p {port_number}",
-        "# note that port_number is required for DOCKER",
+        "ssh patty@0.tcp.ap.ngrok.io -p12905",
         "\n",
         "zip -r {filename}.zip {filename}",
-        "sudo scp -P {port_number} {file_name} {username}@{IP_ADDR}:{directory_localtion}"
+        "sudo scp -P {port_number} {file_name} {username}@{IP_ADDR}:{directory_localtion}",
+        "sudo scp -P {port_number} {file_name} {username}@0.tcp.jp.ngrok.io:{directory_localtion}"
+    }
+};
+
+const Subcategory subcate_remote_ngrok = {
+    "ngrok", 
+    { "ngrok", "NGROK"}, 
+    {
+        "# install",
+        "curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc \\",
+        " | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && \\", 
+        " echo \"deb https://ngrok-agent.s3.amazonaws.com buster main\" \\",
+        " | sudo tee /etc/apt/sources.list.d/ngrok.list && \\",
+        " sudo apt update && sudo apt install ngrok",
+        "\n",
+        "# post-install",
+        "ngrok config add-authtoken <token>",
+        "\n",
+        "# on ngrok server create ngrok.sh",
+        "cd /usr/local/bin",
+        "./ngrok tcp 22 # for ssh purpose"
     }
 };
 
@@ -186,7 +207,8 @@ const category command_remote = {
     {"ssh", "SSH"},
     {
         subcate_remote_setup,
-        subcate_remote_ssh
+        subcate_remote_ssh,
+        subcate_remote_ngrok,
     }
 };
 
