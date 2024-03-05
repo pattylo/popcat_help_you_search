@@ -100,8 +100,6 @@ const category command_git = {
     }
 };
 
-
-
 // docker
 const Subcategory subcate_docker_image = {
     "image", 
