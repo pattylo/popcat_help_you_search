@@ -10,8 +10,8 @@ searchServer::searchServer(QWidget *parent)
     QRect screenGeometry = primaryScreen->geometry();
 
     // Calculate the size for the GUI window (one-quarter of the screen size)
-    int width = screenGeometry.width() / 2 * 1.4;
-    int height = screenGeometry.height() / 2 * 1.4;
+    width = screenGeometry.width() / 2 ;
+    height = screenGeometry.height() / 2;
     
     // Load the image
     QByteArray byteArray = QByteArray::fromBase64(popcatImageData);
@@ -37,9 +37,7 @@ searchServer::searchServer(QWidget *parent)
    
 
     setWindowTitle("PATTY'S INDEX SEARCH!");
-    resize(width, height);
-    // setFixedSize(_
-    
+    resize(width, height);    
 
     QLabel *instructionLabel = new QLabel("SEARCH FOR USEFUL COMMANDLINE!", this);
     instructionLabel->setAlignment(Qt::AlignCenter); // Center-align the text
@@ -51,14 +49,17 @@ searchServer::searchServer(QWidget *parent)
 
     // Create search line edit
     searchLineEdit = new QLineEdit(this);
+    searchLineEdit->setFixedSize(width/2, height/10);
+    font = searchLineEdit->font();
+    font.setPointSize(20);
+    searchLineEdit->setFont(font);
 
     // Create layout and add widget
     mainLayout = new QVBoxLayout;
-
     mainLayout->addWidget(instructionLabel);
     mainLayout->addWidget(searchLineEdit);
-
     mainLayout->addStretch();
+    mainLayout->setAlignment(Qt::AlignCenter);
 
     // Create a central widget and set the layout
     QWidget *centralWidget = new QWidget(this);
@@ -121,6 +122,7 @@ void searchServer::performSearch() {
             // Delete the layout item
             delete lastItem;
         }
+        resize(width, height);
 
     }
     

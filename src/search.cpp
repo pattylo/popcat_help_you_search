@@ -88,7 +88,7 @@ std::vector<std::string> searchServer::searchInstance(const std::string& userInp
 
     if(std::get<1>(category_result) < 0)
     {
-        query_keywords.emplace_back("NULL");
+        query_keywords.emplace_back("KEEP SEARCHING!");
         return query_keywords;
     }
 

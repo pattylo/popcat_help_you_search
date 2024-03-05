@@ -27,7 +27,7 @@ struct category{
 // git
 const Subcategory subcate_git_user = {
     "user", 
-    {"user", "config", "USER", "CONFIG"}, 
+    {"user", "config", "USER", "CONFIG", "name", "NAME", "email", "EMAIL"}, 
     {
         "git config --global user.name {name}",
         "git config --global user.email {email}",
