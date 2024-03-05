@@ -403,6 +403,27 @@ const category command_mavros = {
     }
 };
 
+// latex
+const Subcategory subcate_latex_install = {
+    "install",
+    {"install", "INSTALL"},
+    {
+        "# mac",
+        "brew install --cask mactex-no-gui",
+        "\n",
+        "# ubuntu",
+        "sudo apt install texlive-latex-extra"
+    }
+};
+
+const category command_latex = {
+    "latex",
+    {"LATEX", "latex"},
+    {
+        subcate_latex_install
+    }
+};
+
 
 // all database
 const std::vector<category> database = {
@@ -410,7 +431,8 @@ const std::vector<category> database = {
     command_docker, 
     command_remote, 
     command_vicon,
-    command_mavros
+    command_mavros,
+    command_latex
 };
 
 #endif
