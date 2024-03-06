@@ -8,7 +8,7 @@ Basically, the app could take it some keywords, and spit out the commandline tha
 
 If you want to give it a go, you can download this package and do:
 ```
-cd build && ./index_search
+cd build && ./popcat_help_you_search
 ```
 You will not need any external files to run this, I have embedded everything within it.
 

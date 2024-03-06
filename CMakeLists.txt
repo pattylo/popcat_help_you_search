@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(index_search)
+project(popcat_help_you_search)
 
 # Find the Qt libraries
 set(CMAKE_AUTOMOC ON)
@@ -13,8 +13,8 @@ include_directories(
 
 ############################################################
 
-# Create target for index_search executable
-add_executable(index_search
+# Create target for popcat_help_you_search executable
+add_executable(popcat_help_you_search
     src/main.cpp
     src/searchServer.cpp
     src/search.cpp
@@ -22,14 +22,14 @@ add_executable(index_search
 
 
 # Link Qt libraries
-target_link_libraries(index_search PRIVATE Qt5::Core Qt5::Widgets)
+target_link_libraries(popcat_help_you_search PRIVATE Qt5::Core Qt5::Widgets)
 
 ############################################################
 
 # Create target for lala executable
 add_executable(lala
     src/lala.cpp
-    # src/mainwindow.cpp  # You don't need to include this again if it's already included in index_search
+    # src/mainwindow.cpp  # You don't need to include this again if it's already included in popcat_help_you_search
 )
 
 # Link Qt libraries

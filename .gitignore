@@ -10,5 +10,5 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 .vscode
-build/index_search_autogen
+build/popcat_help_you_search_autogen
 build/lala_autogen
