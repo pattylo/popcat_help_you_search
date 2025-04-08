@@ -3,75 +3,80 @@
 searchServer::searchServer(QWidget *parent)
 : QMainWindow(parent) 
 {
-    // Get the primary screen
+    // first get the screen size -> and then get the window size
     QScreen *primaryScreen = QGuiApplication::primaryScreen();
-
-    // Get the screen geometry
     QRect screenGeometry = primaryScreen->geometry();
-
-    // Calculate the size for the GUI window (one-quarter of the screen size)
     width = screenGeometry.width() / 2 ;
     height = screenGeometry.height() / 2;
+
+    setImage(pop_close);
     
-    // Load the image
+    // load the image, image from base64-enconded
     QByteArray byteArray = QByteArray::fromBase64(popcatImageData);
     QPixmap backgroundImage;
     backgroundImage.loadFromData(byteArray);
 
-    // Create a QLabel for the background image
+    // this is for displaying the image
     QLabel *backgroundLabel = new QLabel(this);
     backgroundLabel->setGeometry(0, 0, width, height); // Set geometry to cover the entire window
-
-    // Set the background image using a pixmap
     backgroundLabel->setPixmap(backgroundImage.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
-
-    // Center-align the background image within the window
     backgroundLabel->setAlignment(Qt::AlignCenter);
 
-    // Create a QGraphicsOpacityEffect to adjust the opacity of the image
+    // image in opacity
     QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect(this);
-    opacityEffect->setOpacity(0.6); // Set opacity value (ranges from 0.0 to 1.0, where 0.0 is fully transparent and 1.0 is fully opaque)
-
-    // Apply the QGraphicsOpacityEffect to the backgroundLabel
+    opacityEffect->setOpacity(0.6); 
     backgroundLabel->setGraphicsEffect(opacityEffect);
    
-
+    // window title
     setWindowTitle("PATTY'S INDEX SEARCH!");
+    setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
+
     resize(width, height);    
 
+    // showing the instructions in the window
     QLabel *instructionLabel = new QLabel("SEARCH FOR USEFUL COMMANDLINE!", this);
-    instructionLabel->setAlignment(Qt::AlignCenter); // Center-align the text
-
+    instructionLabel->setAlignment(Qt::AlignCenter); 
     QFont font = instructionLabel->font();
-    font.setPointSize(25); // Set font size to 20 (adjust as needed)
+    font.setPointSize(25); 
     instructionLabel->setFont(font);
 
-
-    // Create search line edit
+    // create search line edit widget
     searchLineEdit = new QLineEdit(this);
     searchLineEdit->setFixedSize(width/2, height/10);
     font = searchLineEdit->font();
     font.setPointSize(20);
     searchLineEdit->setFont(font);
 
-    // Create layout and add widget
+    // layout of the widget
     mainLayout = new QVBoxLayout;
     mainLayout->addWidget(instructionLabel);
     mainLayout->addWidget(searchLineEdit);
     mainLayout->addStretch();
     mainLayout->setAlignment(Qt::AlignCenter);
 
-    // Create a central widget and set the layout
+    // wrap the layout with a central widget
     QWidget *centralWidget = new QWidget(this);
     centralWidget->setLayout(mainLayout);
     setCentralWidget(centralWidget);
 
     // Create a timer to trigger the search operation after a delay
     searchTimer = new QTimer(this);
-    searchTimer->setInterval(10); // 1 second delay
-    searchTimer->setSingleShot(true); // Single-shot timer
+    searchTimer->setInterval(10); // 10 ms delay
+    searchTimer->setSingleShot(true); 
+
+    // single-shot timer - fire once and stop
     connect(searchLineEdit, &QLineEdit::textChanged, this, &searchServer::searchTextChanged);
+    // textChanged function is shot by QLineEdit
+    // searchTextChanged is called a slot (function)
     connect(searchTimer, &QTimer::timeout, this, &searchServer::performSearch);
+
+    // create resize timer
+    resizeTimer = new QTimer(this);
+
+    // Set the interval for the timer (in milliseconds)
+    resizeTimer->setInterval(1);
+    connect(resizeTimer, &QTimer::timeout, this, &searchServer::setWindowSize);
+    resizeTimer->start();
 }
 
 searchServer::~searchServer() {
@@ -80,10 +85,19 @@ searchServer::~searchServer() {
 void searchServer::searchTextChanged(const QString &text) {
     // Reset the timer to wait for another 1 second before triggering the search
     searchTimer->start();
+
+    if (text.isEmpty()) {
+        resetWidget(true);
+        search_or_not = false;
+    }
 }
 
 void searchServer::performSearch() {
-    // Retrieve the search query from the line edit
+
+    int itemCount = mainLayout->count();
+    search_or_not = false;
+
+    // retrieve the search query from the line edit
     QString searchQuery = searchLineEdit->text();
     
     std::vector<std::string> search_result = searchInstance(searchQuery.toStdString());
@@ -91,7 +105,9 @@ void searchServer::performSearch() {
     QString searchResultDisplay;
     if(!search_result.empty())
     {
+        search_or_not = true;
         searchResultDisplay = vectorString2QString(search_result);
+        
     } 
     else
     {
@@ -100,54 +116,95 @@ void searchServer::performSearch() {
 
     if(search_start)
     {
-        int itemCount = mainLayout->count();
-
-        // If there are items in the layout
-        if (itemCount > 0) {
-            // Get the last added item
-            QLayoutItem *lastItem = mainLayout->takeAt(itemCount - 1);
-            
-            // Get the widget from the layout item
-            QWidget *widget = lastItem->widget();
-            
-            // If the widget exists
-            if (widget) {
-                // Remove the widget from the layout
-                mainLayout->removeWidget(widget);
-                
-                // Delete the widget
-                delete widget;
-            }
-            
-            // Delete the layout item
-            delete lastItem;
-        }
-        resize(width, height);
-
+        resetWidget(false);
     }
     
+    itemCount = mainLayout->count();
     
     QLabel *resultLabel = new QLabel(this);
 
     resultLabel->setAlignment(Qt::AlignCenter); // Align text to the center
-    // resultLabel->setAlignment(Qt::AlignVCenter); // Align text to the center
 
     QFont font = resultLabel->font();
     font.setPointSize(16); // Set font size to 20 (adjust as needed)
     resultLabel->setFont(font);
 
-    // Add the resultLabel to the main layout
-    mainLayout->addWidget(resultLabel);
-
-    // Whenever you have a search result to display:
-
-    resultLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
-    
+    // add resultLabel to main layout
+    resultLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);    
     resultLabel->setText(searchResultDisplay);
-
-    // resultLabel->clear();
+    mainLayout->addWidget(resultLabel);
+    itemCount = mainLayout->count();
 
     search_start = true;
+}
 
+void searchServer::resetWidget(bool resetSearchFlag) 
+{
+    int itemCount = mainLayout->count();
+
+    // If there are items in the layout
+    if (itemCount > 3) {  
+        // Ensure we leave the instruction and searchLineEdit
+        QLayoutItem *lastItem = mainLayout->takeAt(itemCount - 1);
+        
+        // get the widget from the layout item
+        QWidget *widget = lastItem->widget();
+        
+        // if the widget exists, remove and delete it
+        if (widget) {
+            mainLayout->removeWidget(widget);
+            delete widget;
+        }
+
+        // delete the layout item
+        delete lastItem;
+    }
+
+    // reset search flag if needed
+    if (resetSearchFlag) {
+        search_start = false;
+    }
+}
+
+void searchServer::setWindowSize()
+{
+    if(!search_or_not)
+    {
+        resize(width, height);
+        mainLayout->update();
+
+        return;
+    }
+
+    int width_now = QMainWindow().width();
+    int height_now = QMainWindow().width();
+
+    if (width_now != width || height_now != height)
+    {
+        resize(width, height);
+        mainLayout->update();
+    }
+
+}
+
+void searchServer::setImage(const char* image)
+{
+    // load the image, image from base64-enconded
+    QByteArray byteArray = QByteArray::fromBase64(image);
+    QPixmap backgroundImage;
+    backgroundImage.loadFromData(byteArray);
+
+    // this is for displaying the image
+    QLabel *backgroundLabel = new QLabel(this);
+    backgroundLabel->setGeometry(0, 0, width, height); // Set geometry to cover the entire window
+    backgroundLabel->setPixmap(backgroundImage.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    backgroundLabel->setAlignment(Qt::AlignCenter);
+
+    // image in opacity
+    QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect(this);
+    opacityEffect->setOpacity(0.6); 
+    backgroundLabel->setGraphicsEffect(opacityEffect);
+
+    update();
 
 }
