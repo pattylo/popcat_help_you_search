@@ -17,7 +17,10 @@ include_directories(
 add_executable(popcat_help_you_search
     src/main.cpp
     src/searchServer.cpp
-    src/search.cpp
+    src/searchNaiveLinear.cpp
+    # src/searchHashTable.cpp
+    # src/searchBinary.cpp
+    # src/searchFuzzy.cpp
 )
 
 

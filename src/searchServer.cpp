@@ -8,16 +8,14 @@ searchServer::searchServer(QWidget *parent)
     QRect screenGeometry = primaryScreen->geometry();
     width = screenGeometry.width() / 2 ;
     height = screenGeometry.height() / 2;
-
-    setImage(pop_close);
     
     // load the image, image from base64-enconded
-    QByteArray byteArray = QByteArray::fromBase64(popcatImageData);
+    QByteArray byteArray = QByteArray::fromBase64(pop_close);
     QPixmap backgroundImage;
     backgroundImage.loadFromData(byteArray);
 
     // this is for displaying the image
-    QLabel *backgroundLabel = new QLabel(this);
+    backgroundLabel = new QLabel(this);
     backgroundLabel->setGeometry(0, 0, width, height); // Set geometry to cover the entire window
     backgroundLabel->setPixmap(backgroundImage.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     backgroundLabel->setAlignment(Qt::AlignCenter);
@@ -28,13 +26,13 @@ searchServer::searchServer(QWidget *parent)
     backgroundLabel->setGraphicsEffect(opacityEffect);
    
     // window title
-    setWindowTitle("PATTY'S INDEX SEARCH!");
+    setWindowTitle("ASK POPCAT");
     setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
     resize(width, height);    
 
     // showing the instructions in the window
-    QLabel *instructionLabel = new QLabel("SEARCH FOR USEFUL COMMANDLINE!", this);
+    QLabel *instructionLabel = new QLabel("SEARCH STH USEFUL, U CUNT", this);
     instructionLabel->setAlignment(Qt::AlignCenter); 
     QFont font = instructionLabel->font();
     font.setPointSize(25); 
@@ -103,21 +101,33 @@ void searchServer::performSearch() {
     std::vector<std::string> search_result = searchInstance(searchQuery.toStdString());
 
     QString searchResultDisplay;
+
+    bool search_flag = true;
     if(!search_result.empty())
     {
-        search_or_not = true;
-        searchResultDisplay = vectorString2QString(search_result);
+        for (auto what : search_result)
+            if (what == "KEEP SEARCHING!")
+                search_flag = false;            
+            
+        if(search_flag)    
+            search_or_not = true;
         
+        searchResultDisplay = vectorString2QString(search_result);
     } 
     else
     {
         searchResultDisplay = searchQuery;
+        search_flag = false;
     }
 
-    if(search_start)
-    {
+    if (search_flag)
+        setImage(pop_open);
+    else
+        setImage(pop_close);
+
+    // if(search_start)
         resetWidget(false);
-    }
+    
     
     itemCount = mainLayout->count();
     
@@ -172,6 +182,7 @@ void searchServer::setWindowSize()
     {
         resize(width, height);
         mainLayout->update();
+        setImage(pop_close);
 
         return;
     }
@@ -195,16 +206,6 @@ void searchServer::setImage(const char* image)
     backgroundImage.loadFromData(byteArray);
 
     // this is for displaying the image
-    QLabel *backgroundLabel = new QLabel(this);
-    backgroundLabel->setGeometry(0, 0, width, height); // Set geometry to cover the entire window
     backgroundLabel->setPixmap(backgroundImage.scaled(width, height, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     backgroundLabel->setAlignment(Qt::AlignCenter);
-
-    // image in opacity
-    QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect(this);
-    opacityEffect->setOpacity(0.6); 
-    backgroundLabel->setGraphicsEffect(opacityEffect);
-
-    update();
-
 }

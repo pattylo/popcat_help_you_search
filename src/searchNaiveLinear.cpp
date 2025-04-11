@@ -22,10 +22,8 @@ bool searchServer::searchVectorString(
 )
 {
     for(int i = 0; i < to_be_searched.size(); i++)
-    {
         if(keyword == to_be_searched[i])
-            return true;
-    }
+            return true;    
         
     return false;
 }
@@ -63,12 +61,8 @@ std::tuple<bool, int> searchServer::searchCategory(const std::string& keyword)
     std::tuple<bool, int> result;
 
     for(int i = 0; i < database.size(); i++)
-    {
         if(searchVectorString(keyword, database[i].keywords))
-        {
             return {true, i};
-        }
-    }
 
     return {false, -1};
 }
@@ -92,17 +86,10 @@ std::vector<std::string> searchServer::searchInstance(const std::string& userInp
         return query_keywords;
     }
 
-    // std::cout<<database[std::get<1>(category_result)].name<<std::endl<<std::endl;
-
     std::tuple<bool,std::vector<std::string>> display_results = searchSubcategoryCommands(
         query_keywords, 
         std::get<1>(category_result)
     );
-
-    // for(const auto what : std::get<1>(display_results))
-    // {
-    //     std::cout<<what<<std::endl;
-    // }
 
     return std::get<1>(display_results);
 }

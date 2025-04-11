@@ -6,7 +6,7 @@
 #include <string>
 
 
-// Define data structure
+// define data structure
 struct Command {
     std::string keyword;
     std::vector<std::string> commands;
