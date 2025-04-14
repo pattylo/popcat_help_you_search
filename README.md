@@ -8,14 +8,14 @@ Basically, the app could take it some keywords, and spit out the commandline tha
 
 If you want to give it a go, you can download this package and do:
 ```
-cd build && ./popcat_help_you_search
+./popcat
 ```
 You will not need any external files to run this, I have embedded everything within it.
 
-Or, you can build it with cmake (you will need QT5 lib, make sure that you download that before hand):
+Or, you can build it with cmake (you will need QT5 lib, make sure that you download that beforehand):
 ```
 cd build && cmake .. && make
-# for mac -> cmake -DQt5_DIR=$(brew --prefix qt5)/lib/cmake/Qt5 ..
+# for mac -> cmake -DQt5_DIR=$(brew --prefix qt@5)/lib/cmake/Qt5 ..
 ```
 
 ### Things to do
