@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Create directory
-sudo rm -r ~/.local/share/popcat
+if [ -d "$HOME/.local/share/popcat" ]; then
+    rm -rf "$HOME/.local/share/popcat"    
+fi
+
 mkdir -p ~/.local/share/popcat
 
 # Copy files
