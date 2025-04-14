@@ -14,7 +14,8 @@ You will not need any external files to run this, I have embedded everything wit
 
 Or, you can build it with cmake (you will need QT5 lib, make sure that you download that before hand):
 ```
-cd cmake && cmake .. && make
+cd build && cmake .. && make
+# for mac -> cmake -DQt5_DIR=$(brew --prefix qt5)/lib/cmake/Qt5 ..
 ```
 
 ### Things to do

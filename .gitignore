@@ -12,3 +12,4 @@ _deps
 .vscode
 build/popcat_help_you_search_autogen
 build/lala_autogen
+*_autogen/
