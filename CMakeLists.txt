@@ -22,7 +22,6 @@ include_directories(
 
 ############################################################
 
-# Create target for popcat_help_you_search executable
 add_executable(popcat_help_you_search_${ARCHITECTURE}
     src/main.cpp
     src/searchServer.cpp
@@ -38,7 +37,6 @@ target_link_libraries(popcat_help_you_search_${ARCHITECTURE} PRIVATE Qt5::Core Q
 
 ############################################################
 
-# Create target for lala executable
 add_executable(lala_${ARCHITECTURE}
     src/lala.cpp
     # src/mainwindow.cpp  # You don't need to include this again if it's already included in popcat_help_you_search
