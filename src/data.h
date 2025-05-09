@@ -178,7 +178,11 @@ const Subcategory subcate_remote_ssh = {
         "\n",
         "zip -r {filename}.zip {filename}",
         "sudo scp -P {port_number} {file_name} {username}@{IP_ADDR}:{directory_localtion}",
-        "sudo scp -P {port_number} {file_name} {username}@0.tcp.jp.ngrok.io:{directory_localtion}"
+        "sudo scp -P {port_number} {file_name} {username}@0.tcp.jp.ngrok.io:{directory_localtion}",
+        "\n",
+        "nano /etc/ssh/sshd_config",
+        "PermitRootLogin Yes",
+        "Port 6666"
     }
 };
 
@@ -424,6 +428,27 @@ const category command_latex = {
     }
 };
 
+const Subcategory subcate_conda_env = {
+    "env",
+    {"env", "ENV"},
+    {
+        "conda env list",
+        "conda create --name {name} python=3.5 ",
+        "conda activate {name}",
+        "conda deactivate",
+        "conda install --file {setup}.txt"
+        "conda env remove --name {name}"
+    }
+};
+
+const category command_conda = {
+    "latex",
+    {"LATEX", "latex"},
+    {
+        subcate_conda_env
+    }
+};
+
 
 // all database
 const std::vector<category> database = {
@@ -432,7 +457,8 @@ const std::vector<category> database = {
     command_remote, 
     command_vicon,
     command_mavros,
-    command_latex
+    command_latex,
+    command_conda
 };
 
 #endif
