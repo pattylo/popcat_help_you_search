@@ -428,24 +428,37 @@ const category command_latex = {
     }
 };
 
+// conda
 const Subcategory subcate_conda_env = {
     "env",
-    {"env", "ENV"},
+    {"env", "ENV", "create", "CREATE"},
     {
         "conda env list",
-        "conda create --name {name} python=3.5 ",
+        "conda create --name {name} python=3.12 ",
+        "conda env remove --name {name}",
+        "\n",
+        "conda create --clone {name} --name {name-2}",
         "conda activate {name}",
-        "conda deactivate",
+        "conda deactivate"
+    }
+};
+
+const Subcategory subcate_conda_install = {
+    "install",
+    {"install", "INSTALL"},
+    {
+        "conda install {package}",
+        "conda install --channel conda-forge {package}",
         "conda install --file {setup}.txt"
-        "conda env remove --name {name}"
     }
 };
 
 const category command_conda = {
-    "latex",
-    {"LATEX", "latex"},
+    "conda",
+    {"CONDA", "conda"},
     {
-        subcate_conda_env
+        subcate_conda_env,
+        subcate_conda_install
     }
 };
 
