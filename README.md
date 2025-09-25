@@ -3,7 +3,8 @@
 
 Basically, the app could take it some keywords, and spit out the commandline that I need. Something like this:
 
-![Image Alt Text](./images/index_search.png)
+![Image Alt Text](./images/index_search_1.png)
+![Image Alt Text](./images/index_search_0.png)
 
 
 If you want to give it a go, you can download this package and do:
