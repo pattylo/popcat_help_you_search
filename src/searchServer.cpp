@@ -29,7 +29,7 @@ searchServer::searchServer(QWidget *parent)
     setWindowTitle("ASK POPCAT");
     setWindowFlags(Qt::Window | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint);
 
-    resize(width, height);    
+    resize(width, height);     
 
     // showing the instructions in the window
     QLabel *instructionLabel = new QLabel("SEARCH STH USEFUL, U CUNT", this);
