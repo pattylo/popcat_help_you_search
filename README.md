@@ -9,7 +9,7 @@ Basically, the app could take it some keywords, and spit out the commandline tha
 
 If you want to give it a go, you can download this package and do:
 ```
-./popcat
+./popcat # linux x86
 ```
 You will not need any external files to run this, I have embedded everything within it.
 
