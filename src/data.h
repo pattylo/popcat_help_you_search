@@ -75,16 +75,29 @@ const Subcategory subcate_git_repo_merge = {
         "git remote set-head origin {branch-name} #",
     }
 };
-const Subcategory subcate_git_repo_branch_tag = {
-    "branch_rag", 
-    {"branch", "BRANCH", "tag", "TAG"}, 
+const Subcategory subcate_git_repo_branch = {
+    "branch", 
+    {"branch", "BRANCH"}, 
     {
         "git branch {new branch-name}",
         "git checkout -b {new branch-name} {off which branch}",
         "\n",
         "git branch # check all branches",
         "git switch {branch-name} || git checkout {branch-name}",
-        "git push -u origin {branch-name}"
+        "git push -u origin {branch-name}",
+    }
+};
+
+const Subcategory subcate_git_repo_tag = {
+    "tag", 
+    {"tag", "TAG"}, 
+    {
+        "git tag {tag_name} # create a tag",
+        "git tag # check all tags",
+        "\n",
+        "git push origin {tag_name} # push a tag",
+        "git push origin --tags # push all tags",
+        "git checkout {tag_name} # checkout a tag"
     }
 };
 
@@ -96,7 +109,8 @@ const category command_git = {
         subcate_git_repo_init,
         subcate_git_repo_commit,
         subcate_git_repo_merge,
-        subcate_git_repo_branch_tag
+        subcate_git_repo_branch,
+        subcate_git_repo_tag
     }
 };
 
