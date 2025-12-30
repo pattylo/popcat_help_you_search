@@ -1,5 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
-project(popcat_help_you_search)
+project(popcat_help_you_search CXX)
+
+# Set C++ standard
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# On macOS, ensure SDK is properly configured
+if(APPLE)
+    execute_process(COMMAND xcrun --show-sdk-path
+                    OUTPUT_VARIABLE OSX_SDK_PATH
+                    OUTPUT_STRIP_TRAILING_WHITESPACE)
+    set(CMAKE_OSX_SYSROOT ${OSX_SDK_PATH})
+    include_directories(SYSTEM "${OSX_SDK_PATH}/usr/include/c++/v1")
+endif()
 
 # Detect architecture
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64)")
@@ -12,6 +25,11 @@ endif()
 
 # Find the Qt libraries
 set(CMAKE_AUTOMOC ON)
+
+# Set Qt5 path for macOS Homebrew
+if(APPLE)
+    set(CMAKE_PREFIX_PATH "/opt/homebrew/opt/qt@5" ${CMAKE_PREFIX_PATH})
+endif()
 
 find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 

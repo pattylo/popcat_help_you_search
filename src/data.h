@@ -101,6 +101,20 @@ const Subcategory subcate_git_repo_tag = {
     }
 };
 
+const Subcategory subcate_git_repo_sub = {
+    "sub", 
+    {"sub", "SUB", "recursive", "RECURSIVE", "submodule", "SUBMODULE"}, 
+    {
+        "git submodule add {submodule.git}",
+        "\n",
+        "git submodule update --init --recursive",
+        "\n",
+        "git rm --cached {path_to_submodule}",
+        "rm -rf .git/modules/{path_to_submodule}",
+        "rm -rf {path_to_submodule}"
+    }
+};
+
 const category command_git = {
     "git", 
     {"git", "GIT"},
@@ -110,7 +124,8 @@ const category command_git = {
         subcate_git_repo_commit,
         subcate_git_repo_merge,
         subcate_git_repo_branch,
-        subcate_git_repo_tag
+        subcate_git_repo_tag,
+        subcate_git_repo_sub
     }
 };
 
